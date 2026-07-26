@@ -38,32 +38,52 @@ export const AdminDashboardModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleSaveAbout = (e) => {
+  const handleSaveAbout = async (e) => {
     e.preventDefault();
-    updateAboutData(aboutForm);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    try {
+      await updateAboutData(aboutForm);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error('Error saving about data:', err);
+      alert('डाटा सेभ गर्दा समस्या आयो। (Error saving data)');
+    }
   };
 
-  const handleSaveManifesto = (e) => {
+  const handleSaveManifesto = async (e) => {
     e.preventDefault();
-    updateManifestoData(manifestoForm);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    try {
+      await updateManifestoData(manifestoForm);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error('Error saving manifesto data:', err);
+      alert('डाटा सेभ गर्दा समस्या आयो। (Error saving data)');
+    }
   };
 
-  const handleSaveGallery = (e) => {
+  const handleSaveGallery = async (e) => {
     e.preventDefault();
-    updateGalleryData(galleryForm);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    try {
+      await updateGalleryData(galleryForm);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error('Error saving gallery data:', err);
+      alert('डाटा सेभ गर्दा समस्या आयो। (Error saving data)');
+    }
   };
 
-  const handleSaveNews = (e) => {
+  const handleSaveNews = async (e) => {
     e.preventDefault();
-    updateNewsData(newsForm);
-    setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 3000);
+    try {
+      await updateNewsData(newsForm);
+      setSavedSuccess(true);
+      setTimeout(() => setSavedSuccess(false), 3000);
+    } catch (err) {
+      console.error('Error saving news data:', err);
+      alert('डाटा सेभ गर्दा समस्या आयो। (Error saving data)');
+    }
   };
 
   // Home Hero Leader Image Upload
@@ -337,7 +357,7 @@ export const AdminDashboardModal = ({ isOpen, onClose }) => {
               </div>
 
               {/* 2. Leader Video Upload / YouTube URL */}
-              <div className="bg-rose-50 p-4 rounded-xl border border-rose-200 space-y-2 shadow-sm">
+              <div className="bg-rose-50 p-4 rounded-xl border border-rose-200 space-y-3 shadow-sm">
                 <label className="block text-xs font-black text-rose-900 flex items-center justify-between">
                   <span className="flex items-center gap-1.5 text-rose-700">
                     <Video className="w-4 h-4" />
@@ -366,12 +386,50 @@ export const AdminDashboardModal = ({ isOpen, onClose }) => {
 
                   <input
                     type="text"
-                    value={aboutForm?.videoUrl || ''}
+                    value={aboutForm?.videoUrl?.startsWith('data:video/') ? '' : (aboutForm?.videoUrl || '')}
                     onChange={(e) => setAboutForm({ ...aboutForm, videoUrl: e.target.value })}
-                    placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                    placeholder={
+                      aboutForm?.videoUrl?.startsWith('data:video/')
+                        ? '[अपलोड गरिएको भिडियो फाइल सेट छ]'
+                        : 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                    }
                     className="w-full px-3.5 py-2 rounded-xl glass-input text-xs font-mono"
                   />
                 </div>
+
+                {aboutForm?.videoUrl && (
+                  <div className="mt-2 p-3 bg-white rounded-xl border border-rose-200 flex flex-col sm:flex-row items-center justify-between gap-3">
+                    {aboutForm.videoUrl.startsWith('data:video/') ? (
+                      <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+                        <video
+                          src={aboutForm.videoUrl}
+                          controls
+                          className="w-full sm:w-48 h-28 rounded-lg object-contain bg-black"
+                        />
+                        <div className="text-xs text-slate-700 font-bold space-y-1">
+                          <p className="text-emerald-700 font-extrabold flex items-center gap-1">
+                            <CheckCircle2 className="w-4 h-4" /> भिडियो फाइल सेभ गर्न तयार छ
+                          </p>
+                          <p className="text-[11px] text-slate-500 font-normal">
+                            IndexedDB भण्डारण क्षमताद्वारा सुरक्षित रूपमा सेभ हुन्छ।
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-slate-700 font-semibold font-mono truncate max-w-md">
+                        🔗 {aboutForm.videoUrl}
+                      </div>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={() => setAboutForm({ ...aboutForm, videoUrl: '' })}
+                      className="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold transition-colors flex-shrink-0"
+                    >
+                      हटाउनुहोस् (Clear)
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* Name and Subtitle Inputs */}
@@ -808,12 +866,36 @@ export const AdminDashboardModal = ({ isOpen, onClose }) => {
 
                         <input
                           type="text"
-                          value={item.videoUrl || ''}
+                          value={item.videoUrl?.startsWith('data:video/') ? '' : (item.videoUrl || '')}
                           onChange={(e) => handleNewsChange(idx, 'videoUrl', e.target.value)}
-                          placeholder="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                          placeholder={
+                            item.videoUrl?.startsWith('data:video/')
+                              ? '[भिडियो फाइल अपलोड सेट भयो]'
+                              : 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+                          }
                           className="w-full px-3 py-2 rounded-xl glass-input text-xs font-mono"
                         />
                       </div>
+
+                      {item.videoUrl && (
+                        <div className="mt-2 p-2 bg-white rounded-xl border border-rose-200 flex flex-col sm:flex-row items-center justify-between gap-2">
+                          {item.videoUrl.startsWith('data:video/') ? (
+                            <div className="flex items-center gap-2">
+                              <video src={item.videoUrl} controls className="w-36 h-20 rounded bg-black object-contain" />
+                              <span className="text-xs text-emerald-700 font-bold">स्थानीय भिडियो फाइल लोड भयो</span>
+                            </div>
+                          ) : (
+                            <span className="text-xs text-slate-700 font-mono truncate max-w-xs">{item.videoUrl}</span>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleNewsChange(idx, 'videoUrl', '')}
+                            className="px-2.5 py-1 rounded bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold"
+                          >
+                            हटाउनुहोस् (Clear)
+                          </button>
+                        </div>
+                      )}
                     </div>
 
                     {/* News Photo Upload & URL Row */}

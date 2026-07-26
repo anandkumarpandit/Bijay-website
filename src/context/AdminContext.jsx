@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { setStorageItem, getStorageItemAsync } from '../utils/dbStorage';
 
 const AdminContext = createContext();
 
@@ -188,6 +189,36 @@ export const AdminProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : defaultNewsData;
   });
 
+  // Asynchronous sync from IndexedDB on initial mount for large items (videos/photos)
+  useEffect(() => {
+    const loadStoredDataAsync = async () => {
+      try {
+        const asyncAbout = await getStorageItemAsync('bijay_about_data', null);
+        if (asyncAbout) {
+          setAboutData(prev => ({
+            ...defaultAboutData,
+            ...asyncAbout,
+            image: asyncAbout.image || prev.image || defaultAboutData.image,
+            videoUrl: asyncAbout.videoUrl !== undefined ? asyncAbout.videoUrl : prev.videoUrl
+          }));
+        }
+
+        const asyncManifesto = await getStorageItemAsync('bijay_manifesto_data', null);
+        if (asyncManifesto) setManifestoData(asyncManifesto);
+
+        const asyncGallery = await getStorageItemAsync('bijay_gallery_data', null);
+        if (asyncGallery) setGalleryData(asyncGallery);
+
+        const asyncNews = await getStorageItemAsync('bijay_news_data', null);
+        if (asyncNews) setNewsData(asyncNews);
+      } catch (err) {
+        console.warn("Async storage loading error:", err);
+      }
+    };
+
+    loadStoredDataAsync();
+  }, []);
+
   const loginAdmin = (phone, password) => {
     if (phone === '9825342161' && password === 'Password@123') {
       setIsAdminLoggedIn(true);
@@ -204,22 +235,22 @@ export const AdminProvider = ({ children }) => {
 
   const updateAboutData = (newData) => {
     setAboutData(newData);
-    localStorage.setItem('bijay_about_data', JSON.stringify(newData));
+    setStorageItem('bijay_about_data', newData);
   };
 
   const updateManifestoData = (newData) => {
     setManifestoData(newData);
-    localStorage.setItem('bijay_manifesto_data', JSON.stringify(newData));
+    setStorageItem('bijay_manifesto_data', newData);
   };
 
   const updateGalleryData = (newData) => {
     setGalleryData(newData);
-    localStorage.setItem('bijay_gallery_data', JSON.stringify(newData));
+    setStorageItem('bijay_gallery_data', newData);
   };
 
   const updateNewsData = (newData) => {
     setNewsData(newData);
-    localStorage.setItem('bijay_news_data', JSON.stringify(newData));
+    setStorageItem('bijay_news_data', newData);
   };
 
   return (
