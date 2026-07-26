@@ -6,8 +6,8 @@ import { X, Lock, Phone, Key, ShieldCheck, AlertCircle } from 'lucide-react';
 export const AdminLoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const { loginAdmin } = useAdmin();
   const { lang } = useLanguage();
-  const [phone, setPhone] = useState('9825342161');
-  const [password, setPassword] = useState('Password@123');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
   if (!isOpen) return null;
@@ -17,6 +17,8 @@ export const AdminLoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     setErrorMsg('');
     const res = loginAdmin(phone, password);
     if (res.success) {
+      setPhone('');
+      setPassword('');
       onClose();
       if (onLoginSuccess) onLoginSuccess();
     } else {
@@ -72,7 +74,7 @@ export const AdminLoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
               required
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
-              placeholder="9825342161"
+              placeholder={lang === 'ne' ? 'फोन नम्बर राख्नुहोस्...' : 'Enter Mobile Number...'}
               className="w-full px-4 py-3 rounded-xl glass-input text-sm font-semibold"
             />
           </div>
@@ -87,19 +89,14 @@ export const AdminLoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password@123"
+              placeholder="••••••••"
               className="w-full px-4 py-3 rounded-xl glass-input text-sm font-semibold"
             />
           </div>
 
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-            💡 Demo Credentials: <br />
-            <strong>Phone:</strong> 9825342161 | <strong>Password:</strong> Password@123
-          </div>
-
           <button
             type="submit"
-            className="w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md hover:scale-[1.01] transition-transform mt-2 flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-extrabold text-sm shadow-md hover:scale-[1.01] transition-transform mt-4 flex items-center justify-center gap-2"
           >
             <ShieldCheck className="w-4 h-4" />
             <span>{lang === 'ne' ? 'लगइन गर्नुहोस्' : 'Login to Admin Dashboard'}</span>

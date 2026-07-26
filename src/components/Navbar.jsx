@@ -92,7 +92,7 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
             <button
               onClick={onOpenAdminLogin}
               className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-rose-600 transition-all flex-shrink-0 cursor-pointer"
-              title="Admin Login (9825342161)"
+              title={lang === 'ne' ? 'एडमिन लगइन' : 'Admin Login'}
             >
               <Lock className="w-4.5 h-4.5" />
             </button>
