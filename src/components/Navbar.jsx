@@ -16,7 +16,7 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
     const handleScroll = () => {
       const sections = [
         'home', 'biography', 'vision', 'impact', 
-        'news', 'gallery', 'services', 'grievance', 'downloads', 'footer'
+        'gallery', 'services', 'grievance', 'downloads', 'footer'
       ];
       const scrollPos = window.scrollY + 200;
       for (const section of sections) {
@@ -36,7 +36,6 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
     { id: 'biography', href: '#biography', label: t.nav.about },
     { id: 'vision', href: '#vision', label: t.nav.vision },
     { id: 'impact', href: '#impact', label: t.nav.development },
-    { id: 'news', href: '#news', label: t.nav.news },
     { id: 'gallery', href: '#gallery', label: t.nav.gallery },
     { id: 'services', href: '#services', label: t.nav.services },
     { id: 'grievance', href: '#grievance', label: t.nav.complaints },

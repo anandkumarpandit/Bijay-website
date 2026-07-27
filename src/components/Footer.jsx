@@ -7,7 +7,7 @@ export const Footer = () => {
   const { t, lang } = useLanguage();
   const { aboutData } = useAdmin();
 
-  const leaderPhoto = aboutData?.image || '/bijay_pandit_portrait.png';
+  const leaderPhoto = aboutData?.image || '/bijay.jpg';
   const leaderName = lang === 'ne' ? (aboutData?.nameNe || 'विजय पण्डित') : (aboutData?.nameEn || 'Bijay Pandit');
 
   return (
@@ -62,7 +62,6 @@ export const Footer = () => {
               <li><a href="#biography" className="hover:text-rose-600 transition-colors">{t.nav.about}</a></li>
               <li><a href="#vision" className="hover:text-rose-600 transition-colors">{t.nav.vision}</a></li>
               <li><a href="#impact" className="hover:text-rose-600 transition-colors">{t.nav.development}</a></li>
-              <li><a href="#news" className="hover:text-rose-600 transition-colors">{t.nav.news}</a></li>
               <li><a href="#gallery" className="hover:text-rose-600 transition-colors">{t.nav.gallery}</a></li>
             </ul>
           </div>

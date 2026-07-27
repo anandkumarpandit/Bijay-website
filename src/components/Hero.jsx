@@ -47,8 +47,8 @@ export const Hero = ({ onOpenVolunteer, onOpenManifesto }) => {
   const leaderTagline = lang === 'ne' ? (aboutData?.taglineNe || 'नयाँ पुस्ताको नेतृत्व। पारदर्शी शासन। सबैका लागि समुन्नत नेपाल।') : (aboutData?.taglineEn || 'New generation leadership. Transparent governance. Prosperous Nepal for all.');
 
   // Dynamic Photo and Video from Admin
-  const leaderPhoto = aboutData?.image || '/bijay_pandit_portrait.png';
-  const leaderVideoUrl = aboutData?.videoUrl || 'https://www.youtube.com/watch?v=dQw4w9WgXcQ';
+  const leaderPhoto = aboutData?.image || '/bijay.jpg';
+  const leaderVideoUrl = aboutData?.videoUrl || '/bijaymp.mp4';
 
   const videoInfo = leaderVideoUrl ? getEmbedVideoInfo(leaderVideoUrl) : null;
 
@@ -108,19 +108,30 @@ export const Hero = ({ onOpenVolunteer, onOpenManifesto }) => {
               <div className="absolute inset-0 rounded-full bg-slate-200/60 dark:bg-slate-800/60 scale-105 group-hover:scale-110 transition-transform duration-500"></div>
 
               <div className="relative w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl bg-slate-200 dark:bg-slate-900">
-                {/* DYNAMIC IMAGE FROM ADMIN */}
-                <img
-                  src={leaderPhoto}
-                  alt={leaderName}
-                  className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
+                {/* DYNAMIC BACKGROUND VIDEO OR PHOTO FROM ADMIN */}
+                {videoInfo?.type === 'direct' ? (
+                  <video
+                    src={videoInfo.src}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  />
+                ) : (
+                  <img
+                    src={leaderPhoto}
+                    alt={leaderName}
+                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                  />
+                )}
 
                 <div className="absolute inset-0 bg-slate-900/15 group-hover:bg-slate-900/5 transition-colors"></div>
 
                 {/* DYNAMIC PLAY BUTTON */}
                 <button
                   onClick={() => setIsVideoOpen(true)}
-                  className="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-xl hover:scale-110 transition-transform group/btn cursor-pointer"
+                  className="absolute inset-0 m-auto w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-rose-600 hover:bg-rose-700 text-white flex items-center justify-center shadow-xl hover:scale-110 transition-transform group/btn cursor-pointer z-10"
                   title="Watch Speech / भिडियो हेर्नुहोस्"
                 >
                   <Play className="w-8 h-8 sm:w-10 sm:h-10 fill-white text-white ml-1" />

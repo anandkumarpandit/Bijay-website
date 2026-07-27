@@ -7,7 +7,6 @@ import { Hero } from './components/Hero';
 import { Biography } from './components/Biography';
 import { VisionPolicy } from './components/VisionPolicy';
 import { AchievementsImpact } from './components/AchievementsImpact';
-import { NewsNotices } from './components/NewsNotices';
 import { PhotoGallery } from './components/PhotoGallery';
 import { TownHallEvents } from './components/TownHallEvents';
 import { PublicServicesDownloads } from './components/PublicServicesDownloads';
@@ -50,7 +49,6 @@ export function MainContent() {
         <Biography />
         <VisionPolicy />
         <AchievementsImpact />
-        <NewsNotices />
         <PhotoGallery
           onSelectPhotoIndex={handleOpenPhotoPage}
         />

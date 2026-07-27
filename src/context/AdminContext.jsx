@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { setStorageItem, getStorageItemAsync } from '../utils/dbStorage';
+import { saveCloudData, getCloudData, subscribeToCloudChanges } from '../utils/supabaseClient';
 
 const AdminContext = createContext();
 
@@ -10,8 +10,8 @@ const defaultAboutData = {
   roleEn: "People's Leader • Independent Governance",
   taglineNe: "नयाँ पुस्ताको नेतृत्व। पारदर्शी शासन। सबैका लागि समुन्नत नेपाल।",
   taglineEn: "New generation leadership. Transparent governance. Prosperous Nepal for all.",
-  image: "/bijay_pandit_portrait.png",
-  videoUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+  image: "/bijay.jpg",
+  videoUrl: "/bijaymp.mp4",
   timeline: [
     {
       year: "२०६० - २०६५",
@@ -121,7 +121,7 @@ const defaultNewsData = [
 
 यस योजना अन्तर्गत बिनाधितो सहुलियतपूर्ण कर्जा, सित्तैमा प्राविधिक तालिम र व्यावसायिक परामर्श केन्द्रहरू सञ्चालन गरिनेछ। प्रथम चरणमा ५,००० युवाहरू प्रत्यक्ष लाभान्वित हुने लक्ष्य राखिएको छ।`,
     image: '/bijay_pandit_rally.png',
-    videoUrl: 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+    videoUrl: '/bijaymp.mp4'
   },
   {
     id: '2',
@@ -134,7 +134,7 @@ const defaultNewsData = [
     fullContentNe: `काठमाडौँ - सामुदायिक शिक्षा सुधार अभियान अन्तर्गत विजय पण्डितको पहलमा सामुदायिक विद्यालयहरूमा कम्प्युटर ल्याब र डिजिटल स्मार्ट बोर्ड हस्तान्तरण गरिएको छ। 
 
 यस अभियानले गाउँका बालबालिकाहरूलाई पनि आधुनिक प्रविधिसँग जोड्ने विश्वास लिइएको छ।`,
-    image: '/bijay_pandit_portrait.png',
+    image: '/bijay.jpg',
     videoUrl: ''
   },
   {
@@ -150,6 +150,16 @@ const defaultNewsData = [
     videoUrl: ''
   }
 ];
+
+const sanitizeNewsData = (newsList) => {
+  if (!Array.isArray(newsList)) return defaultNewsData;
+  return newsList.map(item => {
+    if (item.videoUrl && item.videoUrl.includes('dQw4w9WgXcQ')) {
+      return { ...item, videoUrl: '/bijaymp.mp4' };
+    }
+    return item;
+  });
+};
 
 export const AdminProvider = ({ children }) => {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
@@ -186,14 +196,21 @@ export const AdminProvider = ({ children }) => {
 
   const [newsData, setNewsData] = useState(() => {
     const saved = localStorage.getItem('bijay_news_data');
-    return saved ? JSON.parse(saved) : defaultNewsData;
+    if (saved) {
+      try {
+        return sanitizeNewsData(JSON.parse(saved));
+      } catch (e) {
+        return defaultNewsData;
+      }
+    }
+    return defaultNewsData;
   });
 
-  // Asynchronous sync from IndexedDB on initial mount for large items (videos/photos)
+  // Load from Cloud / Local Storage on mount & subscribe to real-time changes
   useEffect(() => {
     const loadStoredDataAsync = async () => {
       try {
-        const asyncAbout = await getStorageItemAsync('bijay_about_data', null);
+        const asyncAbout = await getCloudData('bijay_about_data', null);
         if (asyncAbout) {
           setAboutData(prev => ({
             ...defaultAboutData,
@@ -203,20 +220,37 @@ export const AdminProvider = ({ children }) => {
           }));
         }
 
-        const asyncManifesto = await getStorageItemAsync('bijay_manifesto_data', null);
+        const asyncManifesto = await getCloudData('bijay_manifesto_data', null);
         if (asyncManifesto) setManifestoData(asyncManifesto);
 
-        const asyncGallery = await getStorageItemAsync('bijay_gallery_data', null);
+        const asyncGallery = await getCloudData('bijay_gallery_data', null);
         if (asyncGallery) setGalleryData(asyncGallery);
 
-        const asyncNews = await getStorageItemAsync('bijay_news_data', null);
-        if (asyncNews) setNewsData(asyncNews);
+        const asyncNews = await getCloudData('bijay_news_data', null);
+        if (asyncNews) setNewsData(sanitizeNewsData(asyncNews));
       } catch (err) {
-        console.warn("Async storage loading error:", err);
+        console.warn("Cloud/Async storage loading error:", err);
       }
     };
 
     loadStoredDataAsync();
+
+    // Subscribe to real-time updates from other devices (e.g. laptop updating mobile)
+    const unsubscribe = subscribeToCloudChanges((key, newValue) => {
+      if (key === 'bijay_about_data') {
+        setAboutData(prev => ({ ...defaultAboutData, ...newValue }));
+      } else if (key === 'bijay_manifesto_data') {
+        setManifestoData(newValue);
+      } else if (key === 'bijay_gallery_data') {
+        setGalleryData(newValue);
+      } else if (key === 'bijay_news_data') {
+        setNewsData(sanitizeNewsData(newValue));
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const loginAdmin = (phone, password) => {
@@ -233,24 +267,24 @@ export const AdminProvider = ({ children }) => {
     sessionStorage.removeItem('bijay_admin_logged_in');
   };
 
-  const updateAboutData = (newData) => {
+  const updateAboutData = async (newData) => {
     setAboutData(newData);
-    setStorageItem('bijay_about_data', newData);
+    await saveCloudData('bijay_about_data', newData);
   };
 
-  const updateManifestoData = (newData) => {
+  const updateManifestoData = async (newData) => {
     setManifestoData(newData);
-    setStorageItem('bijay_manifesto_data', newData);
+    await saveCloudData('bijay_manifesto_data', newData);
   };
 
-  const updateGalleryData = (newData) => {
+  const updateGalleryData = async (newData) => {
     setGalleryData(newData);
-    setStorageItem('bijay_gallery_data', newData);
+    await saveCloudData('bijay_gallery_data', newData);
   };
 
-  const updateNewsData = (newData) => {
+  const updateNewsData = async (newData) => {
     setNewsData(newData);
-    setStorageItem('bijay_news_data', newData);
+    await saveCloudData('bijay_news_data', newData);
   };
 
   return (

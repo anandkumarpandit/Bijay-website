@@ -7,7 +7,7 @@ export const AchievementsImpact = () => {
   const { t } = useLanguage();
   const { aboutData } = useAdmin();
 
-  const leaderPhoto = aboutData?.image || '/bijay_pandit_portrait.png';
+  const leaderPhoto = aboutData?.image || '/bijay.jpg';
 
   const iconMap = {
     Road: <Milestone className="w-8 h-8 text-rose-600" />,

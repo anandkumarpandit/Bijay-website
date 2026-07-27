@@ -25,7 +25,7 @@ export const MediaGallery = ({ onSelectPhotoIndex }) => {
       titleEn: 'Senior Citizens Healthcare Camp & Honor',
       descNe: 'स्थानीय वडामा आयोजित निःशुल्क स्वास्थ्य परीक्षण शिविर तथा सम्मान पत्र वितरण।',
       descEn: 'Free medical checkup camp organized for senior elders.',
-      image: '/bijay_pandit_portrait.png',
+      image: '/bijay.jpg',
       category: 'gallery',
       date: 'साउन १०, २०८३'
     }
