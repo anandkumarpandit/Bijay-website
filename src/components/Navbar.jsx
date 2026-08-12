@@ -6,7 +6,7 @@ import { Globe, Menu, X, Lock, ShieldCheck, Sun, Moon } from 'lucide-react';
 
 export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
   const { lang, toggleLanguage, t } = useLanguage();
-  const { isAdminLoggedIn } = useAdmin();
+  const { aboutData, isAdminLoggedIn } = useAdmin();
   const { theme, toggleTheme } = useTheme();
   
   const [activeSection, setActiveSection] = useState('home');
@@ -34,25 +34,32 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
   const navItems = [
     { id: 'home', href: '#home', label: t.nav.home },
     { id: 'biography', href: '#biography', label: t.nav.about },
-    { id: 'vision', href: '#vision', label: t.nav.vision },
-    { id: 'impact', href: '#impact', label: t.nav.development },
-    { id: 'gallery', href: '#gallery', label: t.nav.gallery },
+    { id: 'media', href: '#media', label: t.nav.media },
     { id: 'services', href: '#services', label: t.nav.services },
     { id: 'grievance', href: '#grievance', label: t.nav.complaints },
-    { id: 'downloads', href: '#downloads', label: t.nav.downloads },
     { id: 'footer', href: '#contact', label: t.nav.contact },
   ];
 
+  const brandTitle = aboutData?.brandName || (lang === 'ne' ? 'विजय पण्डित.' : 'Bijay Pandit.');
+
   return (
     <>
-      {/* Floating Centered Pill Navbar */}
-      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[96vw]">
+      {/* Compact Floating Navbar Header */}
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-auto max-w-[95vw]">
         
-        {/* Desktop & Laptop Pill Bar */}
-        <div className="hidden lg:flex items-center gap-2 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-300/40 dark:shadow-slate-950/60 rounded-full px-8 py-2.5 transition-colors duration-300">
+        {/* Sleek Compact Pill Bar */}
+        <div className="inline-flex items-center gap-2 sm:gap-3 bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl border border-white/20 dark:border-slate-800 shadow-2xl shadow-slate-950/60 rounded-full px-4 sm:px-6 py-2 text-white transition-all duration-300">
           
-          {/* Link Row */}
-          <div className="flex items-center gap-1.5 no-scrollbar py-0.5">
+          {/* Left: Leader Brand Logo / Name */}
+          <a href="#home" className="text-base sm:text-lg font-black text-white font-serif tracking-tight whitespace-nowrap hover:text-cyan-300 transition-colors flex-shrink-0">
+            {brandTitle}
+          </a>
+
+          {/* Divider */}
+          <div className="hidden lg:block w-[1px] h-4 bg-white/20 mx-1 flex-shrink-0"></div>
+
+          {/* Center: Desktop Navigation Links */}
+          <div className="hidden lg:flex items-center gap-0.5 no-scrollbar py-0.5">
             {navItems.map((item) => {
               const isActive = activeSection === item.id || (item.id === 'home' && activeSection === '');
 
@@ -61,10 +68,10 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
                   key={item.id}
                   href={item.href}
                   onClick={() => setActiveSection(item.id)}
-                  className={`px-3.5 py-1.5 text-xs xl:text-sm font-bold transition-all rounded-full whitespace-nowrap ${
+                  className={`px-2.5 py-1 text-xs font-bold transition-all rounded-full whitespace-nowrap ${
                     isActive
-                      ? 'bg-rose-600 text-white shadow-md shadow-rose-600/30'
-                      : 'text-slate-800 dark:text-slate-200 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                      ? 'bg-cyan-400 text-slate-950 shadow-md shadow-cyan-400/30 font-extrabold'
+                      : 'text-slate-200 hover:text-white hover:bg-white/10'
                   }`}
                 >
                   {item.label}
@@ -74,128 +81,70 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
           </div>
 
           {/* Divider */}
-          <div className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800 mx-2 flex-shrink-0"></div>
+          <div className="hidden sm:block w-[1px] h-4 bg-white/20 mx-1 flex-shrink-0"></div>
 
-          {/* Admin Login / Dashboard Button */}
-          {isAdminLoggedIn ? (
-            <button
-              onClick={onOpenAdminDashboard}
-              className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/60 hover:bg-emerald-100 dark:hover:bg-emerald-900/80 border border-emerald-300 dark:border-emerald-700 text-emerald-800 dark:text-emerald-300 text-xs font-extrabold transition-all hover:scale-105 flex-shrink-0 whitespace-nowrap cursor-pointer"
-              title="Open Admin Board"
-            >
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
-              <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
-              <span>एडमिन बोर्ड</span>
-            </button>
-          ) : (
-            <button
-              onClick={onOpenAdminLogin}
-              className="p-2.5 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-rose-600 transition-all flex-shrink-0 cursor-pointer"
-              title={lang === 'ne' ? 'एडमिन लगइन' : 'Admin Login'}
-            >
-              <Lock className="w-4.5 h-4.5" />
-            </button>
-          )}
-
-          {/* Theme Toggle Button (Light / Dark Mode) */}
-          <button
-            onClick={toggleTheme}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-extrabold transition-all shadow-sm cursor-pointer border flex-shrink-0 ${
-              theme === 'dark'
-                ? 'bg-slate-800 text-amber-300 border-slate-700 hover:bg-slate-700'
-                : 'bg-amber-50 text-slate-800 border-amber-200 hover:bg-amber-100'
-            }`}
-            title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
-          >
-            {theme === 'dark' ? (
-              <>
-                <Moon className="w-4 h-4 text-indigo-400 fill-indigo-400 flex-shrink-0" />
-                <span className="hidden xl:inline text-[11px]">Dark</span>
-              </>
-            ) : (
-              <>
-                <Sun className="w-4 h-4 text-amber-500 fill-amber-500 flex-shrink-0" />
-                <span className="hidden xl:inline text-[11px]">Light</span>
-              </>
-            )}
-          </button>
-
-          {/* Language Globe Button */}
-          <button
-            onClick={toggleLanguage}
-            className="p-2.5 rounded-full hover:bg-rose-50 dark:hover:bg-slate-800 text-rose-600 dark:text-rose-400 transition-all hover:scale-110 flex items-center justify-center flex-shrink-0 cursor-pointer"
-            title={`Language: ${lang === 'ne' ? 'नेपाली' : 'English'}`}
-          >
-            <Globe className="w-4.5 h-4.5 stroke-[2.5]" />
-          </button>
-
-        </div>
-
-        {/* Mobile & Tablet Stretched Header */}
-        <div className="flex lg:hidden items-center justify-between gap-4 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200 dark:border-slate-800 shadow-xl rounded-full px-6 py-3 min-w-[290px] sm:min-w-[380px]">
-          
-          <a href="#home" className="text-base font-black text-slate-900 dark:text-white whitespace-nowrap flex-shrink-0 tracking-tight">
-             विजय पण्डित
-          </a>
-
-          <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Right: Actions (Admin, Theme, Language) */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             
-            {/* Theme Toggle Button Mobile */}
-            <button
-              onClick={toggleTheme}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${
-                theme === 'dark'
-                  ? 'bg-slate-800 text-amber-300 border-slate-700'
-                  : 'bg-amber-50 text-slate-800 border-amber-200'
-              }`}
-              title="Toggle Theme"
-            >
-              {theme === 'dark' ? (
-                <Moon className="w-3.5 h-3.5 text-indigo-400 fill-indigo-400" />
-              ) : (
-                <Sun className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
-              )}
-            </button>
-
-            {/* Language Switcher Mobile */}
-            <button
-              onClick={toggleLanguage}
-              className="p-2 rounded-full text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-slate-800"
-              title="Switch Language"
-            >
-              <Globe className="w-4.5 h-4.5" />
-            </button>
-
+            {/* Admin Login / Dashboard */}
             {isAdminLoggedIn ? (
               <button
                 onClick={onOpenAdminDashboard}
-                className="px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-xs font-extrabold whitespace-nowrap"
+                className="hidden sm:flex items-center gap-1 px-2.5 py-1 rounded-full bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/40 text-emerald-300 text-[11px] font-extrabold transition-all cursor-pointer whitespace-nowrap"
+                title="Open Admin Board"
               >
-                एडमिन
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" />
+                <span>एडमिन</span>
               </button>
             ) : (
               <button
                 onClick={onOpenAdminLogin}
-                className="p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
-                title="Admin Login"
+                className="p-1.5 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-all cursor-pointer"
+                title={lang === 'ne' ? 'एडमिन लगइन' : 'Admin Login'}
               >
-                <Lock className="w-4.5 h-4.5" />
+                <Lock className="w-3.5 h-3.5" />
               </button>
             )}
 
+            {/* Theme Toggle Button */}
+            <button
+              onClick={toggleTheme}
+              className="p-1.5 rounded-full hover:bg-white/10 text-slate-200 hover:text-white transition-all cursor-pointer"
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+            >
+              {theme === 'dark' ? (
+                <Moon className="w-3.5 h-3.5 text-indigo-300 fill-indigo-300" />
+              ) : (
+                <Sun className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+              )}
+            </button>
+
+            {/* Language Switcher Pill Button */}
+            <button
+              onClick={toggleLanguage}
+              className="inline-flex items-center gap-1 px-3 py-1 rounded-full border border-white/30 bg-white/10 hover:bg-white/20 backdrop-blur-md text-white text-[11px] font-extrabold tracking-wider uppercase transition-all hover:scale-105 cursor-pointer shadow-sm"
+              title="Switch Language / भाषा परिवर्तन गर्नुहोस्"
+            >
+              <Globe className="w-3 h-3" />
+              <span>{lang === 'ne' ? 'ENGLISH' : 'नेपाली'}</span>
+            </button>
+
+            {/* Mobile Hamburger Toggle Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-full text-slate-900 dark:text-white hover:bg-slate-100 dark:hover:bg-slate-800 ml-1"
+              className="lg:hidden p-1.5 rounded-full text-white hover:bg-white/10 transition-colors ml-0.5"
             >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              {mobileMenuOpen ? <X className="w-4.5 h-4.5" /> : <Menu className="w-4.5 h-4.5" />}
             </button>
+
           </div>
 
         </div>
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="lg:hidden mt-3 bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 shadow-2xl rounded-3xl p-5 space-y-2 animate-fadeIn text-slate-900 dark:text-white">
+          <div className="lg:hidden mt-3 max-w-7xl mx-auto bg-slate-900/95 backdrop-blur-2xl border border-slate-800 shadow-2xl rounded-3xl p-4 space-y-1.5 text-white animate-fadeIn">
             {navItems.map((item) => (
               <a
                 key={item.id}
@@ -206,8 +155,8 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
                 }}
                 className={`block px-4 py-2.5 rounded-2xl text-sm font-bold transition-all ${
                   activeSection === item.id
-                    ? 'bg-rose-600 text-white shadow-md'
-                    : 'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-800 dark:text-slate-200'
+                    ? 'bg-cyan-400 text-slate-950 font-black shadow-md'
+                    : 'hover:bg-white/10 text-slate-200'
                 }`}
               >
                 {item.label}

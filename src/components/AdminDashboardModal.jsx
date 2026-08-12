@@ -106,6 +106,16 @@ export const AdminDashboardModal = ({ isOpen, onClose }) => {
     reader.readAsDataURL(file);
   };
 
+  // Home Hero Background Photo Upload
+  const handleHeroBgPhotoUpload = (file) => {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setAboutForm(prev => ({ ...prev, bgPhoto: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleTimelineChange = (index, field, value) => {
     const updated = [...aboutForm.timeline];
     updated[index][field] = value;
@@ -415,6 +425,59 @@ export const AdminDashboardModal = ({ isOpen, onClose }) => {
                       className="px-3 py-1.5 rounded-lg bg-rose-100 hover:bg-rose-200 text-rose-700 text-xs font-bold transition-colors flex-shrink-0"
                     >
                       हटाउनुहोस् (Clear)
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* 3. Custom Background Photo Slot */}
+              <div className="bg-cyan-50 p-4 rounded-xl border border-cyan-200 space-y-2 shadow-sm">
+                <label className="block text-xs font-black text-cyan-900 flex items-center justify-between">
+                  <span className="flex items-center gap-1.5 text-cyan-800">
+                    <ImageIcon className="w-4 h-4" />
+                    <span>३. कस्टम ब्याकग्राउन्ड फोटो (Custom Background Photo)</span>
+                  </span>
+                  {aboutForm?.bgPhoto && (
+                    <span className="text-[11px] text-emerald-600 font-extrabold flex items-center gap-1">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> ब्याकग्राउन्ड सेभ छ
+                    </span>
+                  )}
+                </label>
+
+                <div className="flex flex-col sm:flex-row items-center gap-3">
+                  <label className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-700 hover:bg-cyan-800 text-white text-xs font-bold cursor-pointer transition-colors flex-shrink-0 shadow-sm">
+                    <Upload className="w-4 h-4" />
+                    <span>ब्याकग्राउन्ड फोटो अपलोड गर्नुहोस्</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleHeroBgPhotoUpload(e.target.files[0])}
+                      className="hidden"
+                    />
+                  </label>
+
+                  <span className="text-slate-400 text-xs font-bold">वा URL:</span>
+
+                  <input
+                    type="text"
+                    value={aboutForm?.bgPhoto || ''}
+                    onChange={(e) => setAboutForm({ ...aboutForm, bgPhoto: e.target.value })}
+                    placeholder="https://example.com/political-bg.jpg"
+                    className="w-full px-3.5 py-2 rounded-xl glass-input text-xs font-mono"
+                  />
+                </div>
+
+                {aboutForm?.bgPhoto && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <div className="w-24 h-16 rounded-lg overflow-hidden border border-cyan-300 bg-slate-200">
+                      <img src={aboutForm.bgPhoto} alt="BG Preview" className="w-full h-full object-cover" />
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setAboutForm({ ...aboutForm, bgPhoto: '' })}
+                      className="px-3 py-1 rounded-lg bg-cyan-200 hover:bg-cyan-300 text-cyan-900 text-xs font-bold transition-colors"
+                    >
+                      हटाउनुहोस् (Reset to Political Color)
                     </button>
                   </div>
                 )}

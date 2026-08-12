@@ -1,37 +1,37 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { saveCloudData, getCloudData, subscribeToCloudChanges } from '../utils/supabaseClient';
+import { saveCloudData, getCloudData, subscribeToCloudChanges } from '../utils/mongoClient';
 
 const AdminContext = createContext();
 
 const defaultAboutData = {
   nameNe: "विजय पण्डित",
   nameEn: "Bijay Pandit",
+  constituencySubNe: "वडा अध्यक्ष उम्मेदवार",
+  constituencySubEn: "Ward Chairperson Candidate",
+  constituencyAreaNe: "विश्रामपुर गाउँपालिका",
+  constituencyAreaEn: "Bishrampur Gaupalika",
   roleNe: "जननेता • स्वतन्त्र सुशासन",
   roleEn: "People's Leader • Independent Governance",
   taglineNe: "नयाँ पुस्ताको नेतृत्व। पारदर्शी शासन। सबैका लागि समुन्नत नेपाल।",
   taglineEn: "New generation leadership. Transparent governance. Prosperous Nepal for all.",
-  image: "/bijay.jpg",
+  image: "/bijayprofile.png",
   videoUrl: "/bijaymp.mp4",
   timeline: [
     {
-      year: "२०६० - २०६५",
       title: "विद्यार्थी राजनीति र युवा नेतृत्व",
-      desc: "काठमाडौँ विश्वविद्यालयबाट उच्च शिक्षा हासिल गर्दै युवा हकहित र गुणस्तरीय शिक्षाका लागि सामाजिक अभियानको नेतृत्व।"
+      desc: "विश्रामपुर मुसहरवा वडा नं-३ का विजय पण्डितले वीरगन्जको नेशनल एकेडेमी कलेजबाट +२ पूरा गरी विद्यार्थी राजनीति र सामाजिक अभियानको सफल नेतृत्व।"
     },
     {
-      year: "२०६६ - २०७२",
+      title: "राजनीतिक यात्राको सुरुवात",
+      desc: "आफ्नो वडाको विकास र पूर्वाधारको स्थिति निराशाजनक रहेको देखेपछि समाज परिवर्तन र सुशासनका लागि विजय पण्डितले सक्रिय राजनीतिमा प्रवेश गर्नुभएको हो।"
+    },
+    {
       title: "स्थानीय विकास र विपद् व्यवस्थापन",
-      desc: "महाभूकम्प २०७२ पछि ५,००० भन्दा बढी परिवारलाई अस्थायी आवास र पुनर्निरमाण अभियानको अगुवाइ।"
+      desc: "महाभूकम्प २०७२ पछि ५०० भन्दा बढी परिवारलाई अस्थायी आवास र पुनर्निरमाण अभियानको अगुवाइ।"
     },
     {
-      year: "२०७३ - २०७८",
-      title: "सांसद र पूर्वाधार सुधार",
-      desc: "निर्वाचन क्षेत्रमा ५०+ कि.मी. सडक कालोपत्रे, अत्याधुनिक १५ शैयाको अस्पताल र १००% खानेपानी पहुँच।"
-    },
-    {
-      year: "२०७९ - वर्तमान",
       title: "डिजिटल सुशासन र रोजगारी अभियान",
-      desc: "१०,०००+ युवालाई प्रविधि र सीपमूलक तालिम, भ्रष्टाचारविरुद्ध शून्य सहनशीलता र पारदर्शी सुशासन।"
+      desc: "युवाहरूलाई प्रविधि र सीपमूलक तालिम, भ्रष्टाचारविरुद्ध शून्य सहनशीलता र पारदर्शी सुशासन।"
     }
   ]
 };
@@ -171,10 +171,16 @@ export const AdminProvider = ({ children }) => {
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
+        if (parsed.timeline && Array.isArray(parsed.timeline) && parsed.timeline[0]) {
+          if (parsed.timeline[0].desc?.includes('काठमाडौँ विश्वविद्यालय') || !parsed.timeline[0].desc?.includes('विश्रामपुर मुसहरवा')) {
+            parsed.timeline = defaultAboutData.timeline;
+            localStorage.setItem('bijay_about_data', JSON.stringify(parsed));
+          }
+        }
         return {
           ...defaultAboutData,
           ...parsed,
-          image: parsed.image || defaultAboutData.image,
+          image: '/bijayprofile.png',
           videoUrl: parsed.videoUrl !== undefined ? parsed.videoUrl : defaultAboutData.videoUrl
         };
       } catch (e) {
@@ -208,16 +214,39 @@ export const AdminProvider = ({ children }) => {
 
   // Load from Cloud / Local Storage on mount & subscribe to real-time changes
   useEffect(() => {
+    try {
+      const saved = localStorage.getItem('bijay_about_data');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        let updated = false;
+        if (parsed.image !== '/bijayprofile.png') {
+          parsed.image = '/bijayprofile.png';
+          updated = true;
+        }
+        if (parsed.timeline && parsed.timeline[0] && (parsed.timeline[0].desc?.includes('काठमाडौँ विश्वविद्यालय') || !parsed.timeline[0].desc?.includes('विश्रामपुर मुसहरवा'))) {
+          parsed.timeline = defaultAboutData.timeline;
+          updated = true;
+        }
+        if (updated) {
+          localStorage.setItem('bijay_about_data', JSON.stringify(parsed));
+          setAboutData(parsed);
+          saveCloudData('bijay_about_data', parsed);
+        }
+      }
+    } catch (e) { }
+
     const loadStoredDataAsync = async () => {
       try {
         const asyncAbout = await getCloudData('bijay_about_data', null);
         if (asyncAbout) {
-          setAboutData(prev => ({
+          const updatedAbout = {
             ...defaultAboutData,
             ...asyncAbout,
-            image: asyncAbout.image || prev.image || defaultAboutData.image,
-            videoUrl: asyncAbout.videoUrl !== undefined ? asyncAbout.videoUrl : prev.videoUrl
-          }));
+            image: '/bijayprofile.png',
+            videoUrl: asyncAbout.videoUrl !== undefined ? asyncAbout.videoUrl : defaultAboutData.videoUrl
+          };
+          setAboutData(updatedAbout);
+          saveCloudData('bijay_about_data', updatedAbout);
         }
 
         const asyncManifesto = await getCloudData('bijay_manifesto_data', null);
@@ -254,7 +283,7 @@ export const AdminProvider = ({ children }) => {
   }, []);
 
   const loginAdmin = (phone, password) => {
-    if (phone === '9825342161' && password === 'Password@123') {
+    if ((phone === '9807262845' || phone === '9845723116' || phone === '9825342161') && password === 'Password@123') {
       setIsAdminLoggedIn(true);
       sessionStorage.setItem('bijay_admin_logged_in', 'true');
       return { success: true };
@@ -288,12 +317,12 @@ export const AdminProvider = ({ children }) => {
   };
 
   return (
-    <AdminContext.Provider 
-      value={{ 
-        isAdminLoggedIn, 
-        loginAdmin, 
-        logoutAdmin, 
-        aboutData, 
+    <AdminContext.Provider
+      value={{
+        isAdminLoggedIn,
+        loginAdmin,
+        logoutAdmin,
+        aboutData,
         updateAboutData,
         manifestoData,
         updateManifestoData,

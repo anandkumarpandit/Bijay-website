@@ -60,9 +60,10 @@ export const Footer = () => {
             <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
               <li><a href="#home" className="hover:text-rose-600 transition-colors">{t.nav.home}</a></li>
               <li><a href="#biography" className="hover:text-rose-600 transition-colors">{t.nav.about}</a></li>
-              <li><a href="#vision" className="hover:text-rose-600 transition-colors">{t.nav.vision}</a></li>
-              <li><a href="#impact" className="hover:text-rose-600 transition-colors">{t.nav.development}</a></li>
-              <li><a href="#gallery" className="hover:text-rose-600 transition-colors">{t.nav.gallery}</a></li>
+              <li><a href="#media" className="hover:text-rose-600 transition-colors">{t.nav.media}</a></li>
+              <li><a href="#services" className="hover:text-rose-600 transition-colors">{t.nav.services}</a></li>
+              <li><a href="#grievance" className="hover:text-rose-600 transition-colors">{t.nav.complaints}</a></li>
+              <li><a href="#contact" className="hover:text-rose-600 transition-colors">{t.nav.contact}</a></li>
             </ul>
           </div>
 
@@ -72,17 +73,15 @@ export const Footer = () => {
               {t.footer.contactTitle}
             </h4>
             <ul className="space-y-3 text-xs sm:text-sm text-slate-600 dark:text-slate-400 font-medium">
-              <li className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-rose-600 flex-shrink-0 mt-0.5" />
-                <span>{t.footer.address}</span>
-              </li>
               <li className="flex items-center gap-2.5">
                 <Phone className="w-4 h-4 text-rose-600 flex-shrink-0" />
-                <span>+९७७-९८२५३४२१६१</span>
+                <span>
+                  {lang === 'ne' ? '+९७७-९८०७२६२८४५ / +९७७-९८४५७२३११६' : '+977-9807262845 / +977-9845723116'}
+                </span>
               </li>
               <li className="flex items-center gap-2.5">
                 <Mail className="w-4 h-4 text-rose-600 flex-shrink-0" />
-                <span>secretariat@bijaypandit.org.np</span>
+                <a href="mailto:panditbijay105@gmail.com" className="hover:text-rose-600 transition-colors">panditbijay105@gmail.com</a>
               </li>
             </ul>
           </div>

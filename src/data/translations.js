@@ -8,6 +8,7 @@ export const translations = {
       development: "विकास",
       projects: "आयोजना",
       news: "समाचार",
+      media: "मिडिया",
       gallery: "ग्यालरी",
       services: "जनसेवा",
       complaints: "गुनासो",
@@ -44,24 +45,20 @@ export const translations = {
       subtitle: "गाउँको माटोदेखि राष्ट्रिय नीति निर्माणसम्म विजय पण्डितको निष्ठापूर्ण सेवा यात्रा",
       timeline: [
         {
-          year: "२०६० - २०६५",
           title: "विद्यार्थी राजनीति र युवा नेतृत्व",
-          desc: "काठमाडौँ विश्वविद्यालयबाट उच्च शिक्षा हासिल गर्दै युवा हकहित र गुणस्तरीय शिक्षाका लागि सामाजिक अभियानको नेतृत्व।"
+          desc: "विश्रामपुर मुसहरवा वडा नं-३ का विजय पण्डितले वीरगन्जको नेशनल एकेडेमी कलेजबाट +२ पूरा गरी विद्यार्थी राजनीति र सामाजिक अभियानको सफल नेतृत्व।"
         },
         {
-          year: "२०६६ - २०७२",
+          title: "राजनीतिक यात्राको सुरुवात",
+          desc: "आफ्नो वडाको विकास र पूर्वाधारको स्थिति निराशाजनक रहेको देखेपछि समाज परिवर्तन र सुशासनका लागि विजय पण्डितले सक्रिय राजनीतिमा प्रवेश गर्नुभएको हो।"
+        },
+        {
           title: "स्थानीय विकास र विपद् व्यवस्थापन",
-          desc: "महाभूकम्प २०७२ पछि ५,००० भन्दा बढी परिवारलाई अस्थायी आवास र पुनर्निरमाण अभियानको अगुवाइ।"
+          desc: "महाभूकम्प २०७२ पछि ५०० भन्दा बढी परिवारलाई अस्थायी आवास र पुनर्निरमाण अभियानको अगुवाइ।"
         },
         {
-          year: "२०७३ - २०७८",
-          title: "सांसद र पूर्वाधार सुधार",
-          desc: "निर्वाचन क्षेत्रमा ५०+ कि.मी. सडक कालोपत्रे, अत्याधुनिक १५ शैयाको अस्पताल र १००% खानेपानी पहुँच।"
-        },
-        {
-          year: "२०७९ - वर्तमान",
           title: "डिजिटल सुशासन र रोजगारी अभियान",
-          desc: "१०,०००+ युवालाई प्रविधि र सीपमूलक तालिम, भ्रष्टाचारविरुद्ध शून्य सहनशीलता र पारदर्शी सुशासन।"
+          desc: "युवाहरूलाई प्रविधि र सीपमूलक तालिम, भ्रष्टाचारविरुद्ध शून्य सहनशीलता र पारदर्शी सुशासन।"
         }
       ],
       coreValuesTitle: "हाम्रा मूल मान्यताहरू (Core Values)",
@@ -243,7 +240,8 @@ export const translations = {
       vision: "Vision",
       development: "Development",
       projects: "Projects",
-      news: "News",
+      news: "News & Press",
+      media: "Media",
       gallery: "Gallery",
       services: "Services",
       complaints: "Complaints",
@@ -280,24 +278,20 @@ export const translations = {
       subtitle: "From grassroots social work to national policy innovation — Bijay Pandit's story",
       timeline: [
         {
-          year: "2003 - 2008",
           title: "Student Leadership & Youth Advocacy",
-          desc: "Graduated with honors while spearheading campaigns for quality education and youth rights."
+          desc: "Bijay Pandit from Bishrampur Musharwa Ward No. 3 completed his +2 education from National Academy College, Birgunj, leading student activism and youth advocacy."
         },
         {
-          year: "2009 - 2015",
+          title: "Beginning of Political Journey",
+          desc: "Seeing the poor development and lack of infrastructure in his ward, Bijay Pandit entered active politics to bring real change and public service."
+        },
+        {
           title: "Disaster Relief & Community Service",
-          desc: "Led emergency reconstruction for 5,000+ earthquake-affected families in 2015."
+          desc: "Led emergency reconstruction for 500+ earthquake-affected families in 2015."
         },
         {
-          year: "2016 - 2021",
-          title: "Parliamentary Public Work",
-          desc: "Paved 50+ km roads, established a 15-bed modern hospital, and delivered 100% clean drinking water access."
-        },
-        {
-          year: "2022 - Present",
-          title: "Digital Governance & Job Creation",
-          desc: "Trained 10,000+ youth in digital tech skills, enforcing zero-tolerance anti-corruption policies."
+          title: "Digital Governance & Youth Skills",
+          desc: "Trained youth in digital technology skills while enforcing zero-tolerance anti-corruption policies."
         }
       ],
       coreValuesTitle: "Our Core Leadership Values",

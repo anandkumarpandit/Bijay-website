@@ -7,9 +7,15 @@ export const Biography = () => {
   const { t } = useLanguage();
   const { aboutData } = useAdmin();
 
-  const timelineItems = (aboutData && aboutData.timeline && aboutData.timeline.length > 0)
-    ? aboutData.timeline
-    : t.bio.timeline;
+  const timelineItems = t.bio.timeline.map((defaultItem, idx) => {
+    const userItem = (aboutData && aboutData.timeline && aboutData.timeline[idx]) ? aboutData.timeline[idx] : defaultItem;
+    return {
+      ...defaultItem,
+      ...userItem,
+      title: defaultItem.title,
+      desc: defaultItem.desc
+    };
+  });
 
   return (
     <section id="biography" className="relative py-24 bg-slate-50 dark:bg-slate-900 overflow-hidden border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
@@ -49,9 +55,11 @@ export const Biography = () => {
                   <div className={`w-full sm:w-1/2 ${isEven ? 'sm:pl-10' : 'sm:pr-10'}`}>
                     <div className="bg-white dark:bg-slate-950/80 p-6 sm:p-8 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-200/50 dark:shadow-slate-950/50 transition-all">
                       
-                      <div className="inline-block px-3 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-xs font-extrabold mb-3">
-                        {item.year}
-                      </div>
+                      {item.year && (
+                        <div className="inline-block px-3 py-1 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-700 dark:text-rose-300 border border-rose-200 dark:border-rose-900 text-xs font-extrabold mb-3">
+                          {item.year}
+                        </div>
+                      )}
 
                       <h3 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-3">
                         {item.title}

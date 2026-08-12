@@ -5,16 +5,12 @@ import { ThemeProvider } from './context/ThemeContext';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { Biography } from './components/Biography';
-import { VisionPolicy } from './components/VisionPolicy';
-import { AchievementsImpact } from './components/AchievementsImpact';
-import { PhotoGallery } from './components/PhotoGallery';
-import { TownHallEvents } from './components/TownHallEvents';
+import { MediaCoverage } from './components/MediaCoverage';
 import { PublicServicesDownloads } from './components/PublicServicesDownloads';
 import { CitizenVoiceForm } from './components/CitizenVoiceForm';
 import { VolunteerModal } from './components/VolunteerModal';
 import { DonateModal } from './components/DonateModal';
 import { ManifestoModal } from './components/ManifestoModal';
-import { GalleryPageModal } from './components/GalleryPageModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboardModal } from './components/AdminDashboardModal';
 import { Footer } from './components/Footer';
@@ -25,11 +21,9 @@ export function MainContent() {
   const [isManifestoOpen, setIsManifestoOpen] = useState(false);
   const [isAdminLoginOpen, setIsAdminLoginOpen] = useState(false);
   const [isAdminDashboardOpen, setIsAdminDashboardOpen] = useState(false);
-  
-  const [selectedPhotoIndex, setSelectedPhotoIndex] = useState(null);
 
-  const handleOpenPhotoPage = (index) => {
-    setSelectedPhotoIndex(index);
+  const handleOpenManifesto = () => {
+    window.open('/manifestobijay.pdf', '_blank');
   };
 
   return (
@@ -47,12 +41,7 @@ export function MainContent() {
           onOpenManifesto={() => setIsManifestoOpen(true)}
         />
         <Biography />
-        <VisionPolicy />
-        <AchievementsImpact />
-        <PhotoGallery
-          onSelectPhotoIndex={handleOpenPhotoPage}
-        />
-        <TownHallEvents />
+        <MediaCoverage />
         <PublicServicesDownloads
           onOpenManifesto={() => setIsManifestoOpen(true)}
         />
@@ -75,11 +64,6 @@ export function MainContent() {
       <ManifestoModal
         isOpen={isManifestoOpen}
         onClose={() => setIsManifestoOpen(false)}
-      />
-
-      <GalleryPageModal
-        photoIndex={selectedPhotoIndex}
-        onClose={() => setSelectedPhotoIndex(null)}
       />
 
       <AdminLoginModal
