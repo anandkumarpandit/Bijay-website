@@ -28,11 +28,11 @@ export const VolunteerModal = ({ isOpen, onClose }) => {
           _subject: `नयाँ स्वयंसेवक आवेदन - ${formData.name}`,
           _replyto: formData.email,
           _captcha: 'false',
-          _template: 'table',
-          Name: formData.name,
-          Email: formData.email,
-          Phone: formData.phone,
-          Skill: formData.skill
+          _template: 'box',
+          "आवेदकको नाम (Name)": formData.name,
+          "इमेल (Email)": formData.email || 'N/A',
+          "सम्पर्क नम्बर (Phone)": formData.phone,
+          "सीप / योगदान (Skill)": formData.skill
         })
       });
     } catch (err) {

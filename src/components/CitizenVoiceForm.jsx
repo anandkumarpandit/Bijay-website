@@ -28,12 +28,12 @@ export const CitizenVoiceForm = () => {
         body: JSON.stringify({
           _subject: `नयाँ नागरिक गुनासो/सुझाव - ${formData.name}`,
           _captcha: 'false',
-          _template: 'table',
-          Name: formData.name,
-          Phone: formData.phone,
-          Ward: formData.ward,
-          Category: formData.category,
-          Message: formData.message
+          _template: 'box',
+          "नागरिकको नाम (Name)": formData.name,
+          "सम्पर्क नम्बर (Phone)": formData.phone,
+          "वडा / ठेगाना (Ward)": formData.ward,
+          "विषय (Category)": formData.category,
+          "गुनासो / विवरण (Message)": formData.message
         })
       });
     } catch (err) {
