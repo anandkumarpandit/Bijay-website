@@ -4,6 +4,7 @@ import { Send, CheckCircle2, MessageSquareText } from 'lucide-react';
 
 export const CitizenVoiceForm = () => {
   const { t, lang } = useLanguage();
+  const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
@@ -13,23 +14,32 @@ export const CitizenVoiceForm = () => {
     message: ''
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
-    // Persist Complaint Submission in localStorage
     try {
-      const existing = localStorage.getItem('bijay_citizens_complaints');
-      const list = existing ? JSON.parse(existing) : [];
-      const newEntry = {
-        ...formData,
-        id: Date.now().toString(),
-        timestamp: new Date().toLocaleString('ne-NP')
-      };
-      localStorage.setItem('bijay_citizens_complaints', JSON.stringify([newEntry, ...list]));
+      await fetch('https://formsubmit.co/ajax/panditbijay105@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `नयाँ नागरिक गुनासो/सुझाव - ${formData.name}`,
+          _template: 'table',
+          Name: formData.name,
+          Phone: formData.phone,
+          Ward: formData.ward,
+          Category: formData.category,
+          Message: formData.message
+        })
+      });
     } catch (err) {
-      console.error("Error saving complaint to localStorage:", err);
+      console.error("FormSubmit delivery error:", err);
     }
 
+    setSubmitting(false);
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -163,10 +173,11 @@ export const CitizenVoiceForm = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-base shadow-xl shadow-emerald-500/30 hover:shadow-emerald-400/50 transition-all flex items-center justify-center gap-2 group cursor-pointer"
+                  disabled={submitting}
+                  className="w-full py-4 rounded-2xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-black text-base shadow-xl shadow-emerald-500/30 hover:shadow-emerald-400/50 transition-all flex items-center justify-center gap-2 group cursor-pointer"
                 >
                   <Send className="w-5 h-5 text-slate-950" />
-                  <span>{t.grievance.form.submit}</span>
+                  <span>{submitting ? (lang === 'ne' ? 'पठाउँदैछ...' : 'Sending...') : t.grievance.form.submit}</span>
                 </button>
 
               </form>

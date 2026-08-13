@@ -14,21 +14,28 @@ export const VolunteerModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Persist Volunteer Application in localStorage
     try {
-      const existing = localStorage.getItem('bijay_volunteers_list');
-      const list = existing ? JSON.parse(existing) : [];
-      const newEntry = {
-        ...formData,
-        id: Date.now().toString(),
-        timestamp: new Date().toLocaleString('ne-NP')
-      };
-      localStorage.setItem('bijay_volunteers_list', JSON.stringify([newEntry, ...list]));
+      await fetch('https://formsubmit.co/ajax/panditbijay105@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          _subject: `नयाँ स्वयंसेवक आवेदन - ${formData.name}`,
+          _replyto: formData.email,
+          _template: 'table',
+          Name: formData.name,
+          Email: formData.email,
+          Phone: formData.phone,
+          Skill: formData.skill
+        })
+      });
     } catch (err) {
-      console.error("Error saving volunteer to localStorage:", err);
+      console.error("FormSubmit delivery error:", err);
     }
 
     setSubmitted(true);

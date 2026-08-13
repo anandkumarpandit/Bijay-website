@@ -4,6 +4,8 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import nodemailer from 'nodemailer';
+
 
 dotenv.config();
 
@@ -110,6 +112,55 @@ app.post('/api/site-data/:key', async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
+// POST API: Send email notification to panditbijay105@gmail.com
+app.post('/api/send-email', async (req, res) => {
+  try {
+    const { recipient, subject, name, phone, ward, category, message, email, skill, type } = req.body;
+    const targetEmail = recipient || process.env.RECEIVER_EMAIL || 'panditbijay105@gmail.com';
+
+    console.log(`📩 Received ${type || 'contact'} submission from "${name}" intended for ${targetEmail}`);
+
+    if (process.env.SMTP_USER && process.env.SMTP_PASS) {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.SMTP_USER,
+          pass: process.env.SMTP_PASS
+        }
+      });
+
+      await transporter.sendMail({
+        from: `"Bijay Pandit Website" <${process.env.SMTP_USER}>`,
+        to: targetEmail,
+        subject: subject || `नयाँ सन्देश - ${name}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+            <h2 style="color: #059669;">${subject || 'नयाँ सन्देश'}</h2>
+            <p><strong>नाम (Name):</strong> ${name}</p>
+            <p><strong>फोन (Phone):</strong> ${phone || 'N/A'}</p>
+            ${ward ? `<p><strong>वडा (Ward):</strong> ${ward}</p>` : ''}
+            ${category ? `<p><strong>विषय (Category):</strong> ${category}</p>` : ''}
+            ${email ? `<p><strong>इमेल (Email):</strong> ${email}</p>` : ''}
+            ${skill ? `<p><strong>सीप (Skill):</strong> ${skill}</p>` : ''}
+            <hr style="border: 1px solid #eee; margin: 15px 0;" />
+            <p><strong>विवरण (Message):</strong></p>
+            <p style="background: #f9fafb; padding: 12px; rounded: 8px;">${message || 'N/A'}</p>
+          </div>
+        `
+      });
+      console.log(`✅ Email successfully dispatched via SMTP to ${targetEmail}`);
+    } else {
+      console.log(`ℹ️ SMTP credentials not configured yet in .env. Form submission recorded for ${targetEmail}.`);
+    }
+
+    res.json({ success: true, message: `Submission recorded for ${targetEmail}` });
+  } catch (err) {
+    console.error('Email send error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 
 // Fallback to index.html for SPA routing
 app.use((req, res) => {
