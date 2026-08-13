@@ -27,6 +27,7 @@ export const CitizenVoiceForm = () => {
         },
         body: JSON.stringify({
           _subject: `नयाँ नागरिक गुनासो/सुझाव - ${formData.name}`,
+          _captcha: 'false',
           _template: 'table',
           Name: formData.name,
           Phone: formData.phone,

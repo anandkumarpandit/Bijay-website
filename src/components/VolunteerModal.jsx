@@ -27,6 +27,7 @@ export const VolunteerModal = ({ isOpen, onClose }) => {
         body: JSON.stringify({
           _subject: `नयाँ स्वयंसेवक आवेदन - ${formData.name}`,
           _replyto: formData.email,
+          _captcha: 'false',
           _template: 'table',
           Name: formData.name,
           Email: formData.email,
