@@ -51,8 +51,9 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
         <div className="inline-flex items-center gap-2 sm:gap-3 bg-slate-900/90 dark:bg-slate-950/95 backdrop-blur-2xl border border-white/20 dark:border-slate-800 shadow-2xl shadow-slate-950/60 rounded-full px-4 sm:px-6 py-2 text-white transition-all duration-300">
           
           {/* Left: Leader Brand Logo / Name */}
-          <a href="#home" className="text-base sm:text-lg font-black text-white font-serif tracking-tight whitespace-nowrap hover:text-cyan-300 transition-colors flex-shrink-0">
-            {brandTitle}
+          <a href="#home" className="text-base sm:text-lg font-black text-white font-serif tracking-tight whitespace-nowrap hover:text-cyan-300 transition-colors flex-shrink-0 flex items-center gap-2">
+            <img src="/browser.png" alt="Bijay Pandit" className="w-6 h-6 object-contain rounded-full border border-white/20" />
+            <span>{brandTitle}</span>
           </a>
 
           {/* Divider */}
