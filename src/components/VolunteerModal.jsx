@@ -18,7 +18,7 @@ export const VolunteerModal = ({ isOpen, onClose }) => {
     e.preventDefault();
 
     try {
-      await fetch('https://formsubmit.co/ajax/panditbijay105@gmail.com', {
+      await fetch('https://formsubmit.co/ajax/5d9b2b1e19182398539c6547f07199f0', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
