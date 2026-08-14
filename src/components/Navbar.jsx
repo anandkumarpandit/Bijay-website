@@ -52,7 +52,6 @@ export const Navbar = ({ onOpenAdminLogin, onOpenAdminDashboard }) => {
           
           {/* Left: Leader Brand Logo / Name */}
           <a href="#home" className="text-base sm:text-lg font-black text-white font-serif tracking-tight whitespace-nowrap hover:text-cyan-300 transition-colors flex-shrink-0 flex items-center gap-2">
-            <img src="/browser.png" alt="Bijay Pandit" className="w-6 h-6 object-contain rounded-full border border-white/20" />
             <span>{brandTitle}</span>
           </a>
 
