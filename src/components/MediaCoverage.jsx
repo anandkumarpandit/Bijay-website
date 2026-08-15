@@ -2,9 +2,90 @@ import React, { useState, useRef } from 'react';
 import { useLanguage } from '../context/LanguageContext';
 import { Play, ChevronLeft, ChevronRight, X } from 'lucide-react';
 
+const MediaCard = ({ item, itemTitle, onClick }) => {
+  const videoRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0.5;
+    }
+  };
+
+  const isVideoFile = item.videoUrl && (
+    item.videoUrl.endsWith('.mp4') || 
+    item.videoUrl.endsWith('.webm') || 
+    item.videoUrl.startsWith('/') || 
+    item.videoUrl.startsWith('data:video')
+  );
+
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="snap-start flex-shrink-0 w-[270px] sm:w-[320px] group bg-slate-900/70 rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/50 shadow-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between"
+    >
+      {/* Thumbnail Container */}
+      <div className="relative aspect-video overflow-hidden bg-slate-950">
+        {isVideoFile ? (
+          <video
+            ref={videoRef}
+            src={`${item.videoUrl}#t=0.5`}
+            preload="metadata"
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-90 group-hover:brightness-100"
+          />
+        ) : (
+          <img
+            src={item.thumbnail || '/bijayprofile.png'}
+            alt={itemTitle}
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/bijayprofile.png';
+            }}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-90 group-hover:brightness-100"
+          />
+        )}
+
+        {/* Dark Overlay Tint */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
+
+        {/* Circular Translucent Play Button Icon */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-11 h-11 rounded-full bg-white/25 backdrop-blur-md border border-white/40 group-hover:bg-cyan-400 group-hover:text-slate-950 text-white flex items-center justify-center transition-all duration-300 shadow-2xl group-hover:scale-110">
+            <Play className="w-5 h-5 fill-current translate-x-0.5" />
+          </div>
+        </div>
+
+        {/* Source Tag Badge */}
+        <div className="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-slate-950/80 backdrop-blur-md border border-white/15 text-[9px] font-extrabold uppercase tracking-widest text-slate-300">
+          {item.source}
+        </div>
+      </div>
+
+      {/* Title Info */}
+      <div className="p-4 sm:p-5">
+        <h3 className="text-xs sm:text-sm font-extrabold text-white leading-snug group-hover:text-amber-300 transition-colors line-clamp-2">
+          {itemTitle}
+        </h3>
+      </div>
+    </div>
+  );
+};
+
 export const MediaCoverage = () => {
   const { lang } = useLanguage();
   const [activeVideoUrl, setActiveVideoUrl] = useState(null);
+  const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
 
   // Sample media interviews list
@@ -13,46 +94,61 @@ export const MediaCoverage = () => {
       id: 1,
       titleNe: "विश्रामपुरको विकास, सुशासन र युवा नेतृत्वबारे विजय पण्डितको विशेष अन्तरवार्ता",
       titleEn: "Exclusive Fireside Interview with Bijay Pandit on Local Governance & Youth Leadership",
-      source: "YOUTUBE • FIRESIDE",
+      source: "MEDIA • FIRESIDE",
       thumbnail: "https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      videoUrl: "/media1.mp4"
     },
     {
       id: 2,
       titleNe: "भ्रष्टाचार निवारण र पारदर्शी बजेटबारे विजय पण्डितसँग बहस",
       titleEn: "Rapid Fireside Discussion on Anti-Corruption & Transparent Ward Budgeting",
-      source: "YOUTUBE • RECENT",
+      source: "MEDIA • RECENT",
       thumbnail: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&w=800&q=80",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      videoUrl: "/media2.mp4"
     },
     {
       id: 3,
       titleNe: "जनताको प्रश्न, विजय पण्डितको उत्तर - वडा अध्यक्षको कार्ययोजना",
       titleEn: "People's Voice & Direct Dialogue: Comprehensive Action Plan for Ward No. 5",
-      source: "YOUTUBE • DIALOGUE",
+      source: "MEDIA • DIALOGUE",
       thumbnail: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&w=800&q=80",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      videoUrl: "/media1.mp4"
     },
     {
       id: 4,
       titleNe: "शिक्षा, स्वास्थ्य र रोजगार - परिवर्तनको ५ वर्षे दूरदृष्टि",
       titleEn: "Education, Healthcare & Jobs: 5-Year Vision for Community Transformation",
-      source: "YOUTUBE • SPECIAL",
+      source: "MEDIA • SPECIAL",
       thumbnail: "https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&w=800&q=80",
-      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ"
+      videoUrl: "/media2.mp4"
     }
   ];
 
-  const scrollLeft = () => {
+  const handleScroll = () => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: -320, behavior: 'smooth' });
+      const scrollPosition = scrollRef.current.scrollLeft;
+      const firstChild = scrollRef.current.children[0];
+      const cardWidth = firstChild ? firstChild.getBoundingClientRect().width + 20 : 320;
+      const index = Math.round(scrollPosition / cardWidth);
+      setActiveIndex(Math.min(Math.max(index, 0), mediaList.length - 1));
     }
   };
 
-  const scrollRight = () => {
+  const scrollTo = (index) => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: 320, behavior: 'smooth' });
+      const firstChild = scrollRef.current.children[0];
+      const cardWidth = firstChild ? firstChild.getBoundingClientRect().width + 20 : 320;
+      scrollRef.current.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
+      setActiveIndex(index);
     }
+  };
+
+  const scrollLeft = () => {
+    scrollTo(Math.max(0, activeIndex - 1));
+  };
+
+  const scrollRight = () => {
+    scrollTo(Math.min(mediaList.length - 1, activeIndex + 1));
   };
 
   return (
@@ -100,57 +196,37 @@ export const MediaCoverage = () => {
           {/* Horizontal Scrollable Track */}
           <div 
             ref={scrollRef}
+            onScroll={handleScroll}
             className="flex items-stretch gap-4 sm:gap-6 overflow-x-auto no-scrollbar snap-x snap-mandatory py-4 scroll-smooth"
           >
             {mediaList.map((item) => {
               const itemTitle = lang === 'ne' ? item.titleNe : item.titleEn;
 
               return (
-                <div
+                <MediaCard
                   key={item.id}
+                  item={item}
+                  itemTitle={itemTitle}
                   onClick={() => setActiveVideoUrl(item.videoUrl)}
-                  className="snap-start flex-shrink-0 w-[270px] sm:w-[320px] group bg-slate-900/70 rounded-2xl overflow-hidden border border-white/10 hover:border-cyan-400/50 shadow-xl transition-all duration-300 hover:-translate-y-1.5 cursor-pointer flex flex-col justify-between"
-                >
-                  {/* Thumbnail Container */}
-                  <div className="relative aspect-video overflow-hidden bg-slate-950">
-                    <img
-                      src={item.thumbnail}
-                      alt={itemTitle}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 filter brightness-90 group-hover:brightness-100"
-                    />
-
-                    {/* Dark Overlay Tint */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent"></div>
-
-                    {/* Circular Translucent Play Button Icon */}
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-11 h-11 rounded-full bg-white/25 backdrop-blur-md border border-white/40 group-hover:bg-cyan-400 group-hover:text-slate-950 text-white flex items-center justify-center transition-all duration-300 shadow-2xl group-hover:scale-110">
-                        <Play className="w-5 h-5 fill-current translate-x-0.5" />
-                      </div>
-                    </div>
-
-                    {/* Source Tag Badge */}
-                    <div className="absolute bottom-2.5 left-2.5 px-2 py-0.5 rounded bg-slate-950/80 backdrop-blur-md border border-white/15 text-[9px] font-extrabold uppercase tracking-widest text-slate-300">
-                      {item.source}
-                    </div>
-                  </div>
-
-                  {/* Title Info */}
-                  <div className="p-4 sm:p-5">
-                    <h3 className="text-xs sm:text-sm font-extrabold text-white leading-snug group-hover:text-amber-300 transition-colors line-clamp-2">
-                      {itemTitle}
-                    </h3>
-                  </div>
-                </div>
+                />
               );
             })}
           </div>
 
           {/* Slider Pagination Indicator Dots */}
-          <div className="flex items-center justify-center gap-1.5 mt-6">
-            <span className="w-6 h-1.5 bg-amber-400 rounded-full transition-all"></span>
-            <span className="w-1.5 h-1.5 bg-white/30 rounded-full transition-all"></span>
-            <span className="w-1.5 h-1.5 bg-white/30 rounded-full transition-all"></span>
+          <div className="flex items-center justify-center gap-2 mt-6">
+            {mediaList.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => scrollTo(idx)}
+                aria-label={`Go to slide ${idx + 1}`}
+                className={`transition-all duration-300 rounded-full cursor-pointer ${
+                  activeIndex === idx
+                    ? 'w-7 h-2 bg-amber-400 shadow-md shadow-amber-400/50'
+                    : 'w-2 h-2 bg-white/30 hover:bg-white/60'
+                }`}
+              />
+            ))}
           </div>
 
         </div>
@@ -170,13 +246,22 @@ export const MediaCoverage = () => {
             </button>
 
             <div className="relative aspect-video rounded-2xl overflow-hidden mt-8 bg-black">
-              <iframe
-                src={activeVideoUrl}
-                title="Media Video"
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              {activeVideoUrl.endsWith('.mp4') || activeVideoUrl.startsWith('/') || activeVideoUrl.startsWith('data:video') ? (
+                <video
+                  src={activeVideoUrl}
+                  controls
+                  autoPlay
+                  className="w-full h-full object-contain"
+                />
+              ) : (
+                <iframe
+                  src={activeVideoUrl}
+                  title="Media Video"
+                  className="w-full h-full"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                ></iframe>
+              )}
             </div>
           </div>
         </div>
