@@ -164,13 +164,19 @@ export const Hero = ({ onOpenVolunteer, onOpenManifesto }) => {
                 />
                 
                 {/* Current Designation Badge Under Photo */}
-                <div className="mt-2 lg:mt-3 z-20">
-                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 border border-amber-400/40 backdrop-blur-md text-amber-300 text-xs sm:text-sm font-extrabold shadow-2xl tracking-wide">
-                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping flex-shrink-0"></span>
-                    <span>
-                      {lang === 'ne' ? 'हाल: बिश्रामपुर गाउँपालिकाको कार्यपालिका सदस्य' : 'Currently: Executive Committee Member, Bishrampur Gaupalika'}
+                <div className="mt-3 sm:mt-4 z-20 px-2 w-full flex justify-center lg:justify-end">
+                  <div className="inline-flex items-center gap-2.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-2xl sm:rounded-full bg-slate-950/90 border border-amber-400/40 backdrop-blur-xl shadow-2xl max-w-[90vw] sm:max-w-none text-center">
+                    {/* Glowing Blinking Bulb Indicator */}
+                    <span className="relative flex h-3 w-3 flex-shrink-0 items-center justify-center">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-400 animate-pulse shadow-[0_0_12px_#fbbf24] border border-amber-200"></span>
                     </span>
-                  </span>
+                    <span className="text-[11px] sm:text-xs md:text-sm font-extrabold text-amber-300 tracking-wide leading-tight sm:leading-normal">
+                      {lang === 'ne'
+                        ? 'हाल: बिश्रामपुर गाउँपालिकाको कार्यपालिका सदस्य'
+                        : 'Currently: Executive Committee Member, Bishrampur Gaupalika'}
+                    </span>
+                  </div>
                 </div>
               </div>
 
