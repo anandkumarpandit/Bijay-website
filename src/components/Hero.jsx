@@ -156,12 +156,22 @@ export const Hero = ({ onOpenVolunteer, onOpenManifesto }) => {
             {/* Candidate Image Container */}
             <div className="relative w-[125%] sm:w-full max-w-none sm:max-w-[620px] lg:max-w-[680px] xl:max-w-[760px] group flex flex-col items-center lg:items-end -translate-y-24 sm:-translate-y-28 lg:-translate-y-16 xl:-translate-y-20 translate-x-0 sm:translate-x-3 lg:translate-x-8 xl:translate-x-12">
 
-              <div className="relative w-full flex justify-center lg:justify-end">
+              <div className="relative w-full flex flex-col items-center lg:items-end justify-center">
                 <img
                   src={leaderPhoto}
                   alt={leaderBrand}
                   className="w-full h-auto max-h-[750px] sm:max-h-[850px] lg:max-h-[900px] object-contain object-bottom scale-130 sm:scale-100 group-hover:scale-105 transition-transform duration-700 filter drop-shadow-2xl"
                 />
+                
+                {/* Current Designation Badge Under Photo */}
+                <div className="mt-2 lg:mt-3 z-20">
+                  <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 border border-amber-400/40 backdrop-blur-md text-amber-300 text-xs sm:text-sm font-extrabold shadow-2xl tracking-wide">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping flex-shrink-0"></span>
+                    <span>
+                      {lang === 'ne' ? 'हाल: बिश्रामपुर गाउँपालिकाको कार्यपालिका सदस्य' : 'Currently: Executive Committee Member, Bishrampur Gaupalika'}
+                    </span>
+                  </span>
+                </div>
               </div>
 
             </div>
